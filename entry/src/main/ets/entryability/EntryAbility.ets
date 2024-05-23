@@ -1,6 +1,8 @@
 import UIAbility from '@ohos.app.ability.UIAbility';
 import hilog from '@ohos.hilog';
 import window from '@ohos.window';
+import TaskDB from '../common/utils/TaskDB'
+
 
 export default class EntryAbility extends UIAbility {
   onCreate(want, launchParam) {
@@ -14,6 +16,10 @@ export default class EntryAbility extends UIAbility {
   onWindowStageCreate(windowStage: window.WindowStage) {
     // Main window is created, set main page for this ability
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
+
+    //初始化数据库
+    console.log('testDB','创建ability -------- ')
+    TaskDB.initTaskDB(this.context)
 
     windowStage.loadContent('pages/Index', (err, data) => {
       if (err.code) {
