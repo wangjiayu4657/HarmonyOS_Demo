@@ -1,6 +1,7 @@
 {
   "src": [
     "pages/Index",
-    "pages/TaskManager"
+    "pages/TaskManagerPage",
+    "pages/NotificationPage"
   ]
 }

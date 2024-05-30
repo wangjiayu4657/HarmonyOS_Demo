@@ -1,33 +1,45 @@
 import router from '@ohos.router'
 import RouterModel from '../models/RouterModel'
+import RouterUtil from '../common/utils/RouterUtil'
+import StorageUtil from '../common/utils/StorageUtil'
+import FontSizePanel from '../views/FontSizePanel'
 
 @Extend(Text) function textStyles() {
-  .fontSize(20)
   .fontColor(Color.White)
   .fontWeight(FontWeight.Bold)
 }
 
+
+
 @Entry
 @Component
 struct Index {
-  //数据源
-  routers:RouterModel[] = [
-    new RouterModel('pages/TaskManager', '任务管理'),
-    new RouterModel('pages/TaskManager', '本地缓存'),
-    new RouterModel('pages/TaskManager', '数据库缓存'),
-    new RouterModel('pages/TaskManager', '通知'),
-    new RouterModel('pages/TaskManager', '网络请求'),
-    new RouterModel('pages/TaskManager', '列表上拉加载或下拉刷新'),
-  ]
+  @State showPanel:boolean = false
+  @Provide fontSize:number = 16
+
+  async aboutToAppear() {
+    this.fontSize = await StorageUtil.getPreference('FontSizePreference','FontSizeKey', 16) as number
+    this.fontSize = this.fontSize ?? 16
+    console.log(`fontSize == ${this.fontSize}`)
+  }
 
   //UI构建
   build() {
    Column() {
      //底部header组件
      this.HeaderView()
+
      //列表组件
      this.ListView()
+
+     //是否展示字体设置面板
+     if(this.showPanel) {
+       FontSizePanel()
+         .transition({translate: {y: 115}})
+     }
    }
+   .width('100%')
+   .height('100%')
   }
 
   @Builder HeaderView() {
@@ -41,6 +53,7 @@ struct Index {
         .width(30)
         .onClick((() => {
           console.log('testTag', '设置按钮点击')
+          animateTo({duration:500, curve:Curve.EaseInOut}, () => this.showPanel = !this.showPanel)
         }))
     }
     .width('100%')
@@ -52,7 +65,7 @@ struct Index {
   @Builder ListView() {
     List({space:0}) {
       ForEach(
-        this.routers,
+        RouterUtil.routers,
         (item:RouterModel, index) => {
           ListItem() {
             this.BuildListItem(index,item.title)
@@ -74,10 +87,12 @@ struct Index {
     Row() {
       Text(`${index}.`)
         .textStyles()
+        .fontSize(this.fontSize)
         .padding({left:15})
 
       Text(title)
         .textStyles()
+        .fontSize(this.fontSize)
         .padding({right:15})
     }
     .width('100%')
@@ -89,15 +104,15 @@ struct Index {
 
   //路由跳转
   routeAction(model:RouterModel) {
-    router.pushUrl(
-      {url:model.url},
-      router.RouterMode.Single,
-      err => {
+    router.pushUrl({
+      url:model.url
+    }, router.RouterMode.Single, (err) => {
         if(err) {
           console.log(`路由失败, errCode: ${err.code} errMsg:${err.message}`)
+        } else {
+          console.info('pushUrl success')
         }
-      }
-    )
+    })
   }
 }
 

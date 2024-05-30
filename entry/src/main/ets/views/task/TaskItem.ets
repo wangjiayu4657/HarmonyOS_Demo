@@ -1,6 +1,6 @@
 //任务item组件
 import TaskModel from '../../models/TaskModel'
-import TaskDB from '../../common/utils/TaskDB'
+import TaskUtil from '../../common/utils/TaskUtil'
 
 @Component
 export struct TaskItem {
@@ -33,7 +33,7 @@ export struct TaskItem {
   }
 
   handlerUpdateTask(isFinished:boolean) {
-    TaskDB
+    TaskUtil
       .updateTaskStatus(this.task.id,isFinished)
       .then(() => {
         this.task.finished = isFinished

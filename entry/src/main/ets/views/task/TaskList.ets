@@ -1,7 +1,7 @@
 
 import TaskModel from '../../models/TaskModel';
 import { TaskItem } from './TaskItem';
-import TaskDB from '../../common/utils/TaskDB'
+import TaskUtil from '../../common/utils/TaskUtil'
 
 
 //任务列表
@@ -14,12 +14,13 @@ export struct TaskList {
   //任务数组
   @State tasks: TaskModel[] = [];
 
+
   dialogController:CustomDialogController = new CustomDialogController({
     builder: TaskAlertView({onTaskConfirm:this.handlerAddTask.bind(this)})
   })
 
   aboutToAppear() {
-    TaskDB
+    TaskUtil
       .queryAllTask()
       .then(tasks => {
         console.log('testDB', '查询任务成功: task = ',tasks)
@@ -92,7 +93,7 @@ export struct TaskList {
 
   //新增任务
   handlerAddTask(name: string) {
-    TaskDB.addTask(name)
+    TaskUtil.addTask(name)
       .then(id => {
         console.log('testDB', '新增任务成功: ', name)
         //添加到数组并回显到页面
@@ -109,7 +110,7 @@ export struct TaskList {
 
   //删除任务
   handlerDeleteTask(id:number,index:number) {
-    TaskDB
+    TaskUtil
       .deleteTask(id)
       .then(() => {
         this.tasks.splice(index, 1)
@@ -119,7 +120,7 @@ export struct TaskList {
   }
 }
 
-@Component
+
 @CustomDialog
 struct TaskAlertView {
   //名称

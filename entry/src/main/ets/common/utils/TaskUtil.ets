@@ -1,7 +1,8 @@
 import relationalStore from '@ohos.data.relationalStore';
 import TaskModel from '../../models/TaskModel';
 
-class TaskDB {
+//任务数据库存储
+class TaskUtil {
   private tableName:string = 'TASK_TABLE'
   private rdbStore:relationalStore.RdbStore
 
@@ -108,5 +109,5 @@ class TaskDB {
   }
 }
 
-const taskDB = new TaskDB();
-export default taskDB as TaskDB;
+const taskDB = new TaskUtil();
+export default taskDB as TaskUtil;

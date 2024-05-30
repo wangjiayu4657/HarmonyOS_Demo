@@ -1,7 +1,8 @@
 import UIAbility from '@ohos.app.ability.UIAbility';
 import hilog from '@ohos.hilog';
 import window from '@ohos.window';
-import TaskDB from '../common/utils/TaskDB'
+import TaskUtil from '../common/utils/TaskUtil'
+import StorageUtil from '../common/utils/StorageUtil'
 
 
 export default class EntryAbility extends UIAbility {
@@ -17,9 +18,10 @@ export default class EntryAbility extends UIAbility {
     // Main window is created, set main page for this ability
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
 
+    //初始化用户首选项本地存储
+    StorageUtil.initPreference(this.context, 'FontSizePreference')
     //初始化数据库
-    console.log('testDB','创建ability -------- ')
-    TaskDB.initTaskDB(this.context)
+    TaskUtil.initTaskDB(this.context)
 
     windowStage.loadContent('pages/Index', (err, data) => {
       if (err.code) {
